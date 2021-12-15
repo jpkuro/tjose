@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <meta charset="utf-8">
+   <title>Juego de lengua</title>
+   <script type= "text/javascript" src="js/phaser.min.js"></script>
+   <link href="css/css.css" rel="stylesheet" type="text/css" />
+   <link rel="icon" type="image/png" href="assets/Misc/HVGamesIco.ico" />
+ </head>
+ <body>
+   <center> <div id="gameDiv"> </div> </center>
+   <script type="text/javascript">
+  /*Tamaño del juego*/
+   var game= new Phaser.Game(1000, 515, Phaser.AUTO, 'gameDiv',{preload:preload, create: create, update: update});
+
+
+  /*Se cargan los archivos*/
+    function preload(){
+      game.stage.backgroundColor = '#182d3b';
+      game.add.text(16, 16, "Loading ...",  { fill: '#ffffff' });
+      /*Se cargan las imagenes*/
+      game.load.image('loading', 'assets/Misc/load.png');
+      game.load.image('menu', 'assets/Misc/menu1.png');
+      game.load.spritesheet('playbt', 'assets/Misc/playbt1.png', 200,60);
+      game.load.image('play', 'assets/Misc/play1.png');
+      game.load.spritesheet('nube', 'assets/Misc/nube1.png');
+      game.load.image('cuadropregunta', 'assets/Misc/cuadropregunta1.png');
+      game.load.spritesheet('bien', 'assets/Misc/Bien1.png');
+      game.load.spritesheet('mal', 'assets/Misc/Mal1.png');
+      game.load.spritesheet('sig', 'assets/Misc/siguiente.png', 280,57);
+      game.load.image('win', 'assets/Misc/win1.png');
+      game.load.image('lose', 'assets/Misc/lose.png');
+      game.load.image('cuadrof', 'assets/Misc/cuadrof.png');
+      game.load.image('cuadrop', 'assets/Misc/cuadrop.png');
+      game.load.spritesheet('close', 'assets/Misc/close1.png',78, 50);
+      game.load.spritesheet('github', 'assets/Misc/Octocat.png');
+      game.load.image('globo', 'assets/Misc/globo.png');
+
+      /*Se cargan el sonido*/
+      game.load.audio('Sgame', 'assets/music/Where_to_Walk.wav');
+      game.load.audio('Splay', 'assets/music/coin_sound1.mp3');
+      game.load.audio('Sbien', 'assets/music/bien.wav');
+      game.load.audio('Smal', 'assets/music/mal.wav');
+      game.load.audio('Smenu', 'assets/music/menu.mp3');
+      game.load.audio('Swin', 'assets/music/win.mp3');
+      game.load.audio('Slose', 'assets/music/lose.mp3');
+
+    }
+/*Variables globales*/
+    var button;
+    var menu;
+    var load;
+    var ale = 0;
+    var acierto;
+    var error1;
+    var error2;
+    /*Preguntas del nivel de las nubes*/
+    var preguntasNubes = [
+      ['ichigo es un'],
+      [ 'Construcción hecha de cualquier material para cercar un terreno,finca, \netc., en especial la que está hecha de estacas, tablas o tela metálica.'],
+      [ 'Indica de forma poco precisa un lugar alejado de la persona que habla y \nde la persona que escucha.' ],
+      [ 'Introduce una pregunta sobre la dirección hacia la que se dirige un \nmovimiento.' ],
+      [ 'Se utiliza para expresar el deseo de ver, para denotar curiosidad o \ninterés.'],
+      [ 'Que siente, piensa y actúa con conocimiento de lo que hace.'],
+      [ 'Se utiliza en frases interrogativas, ya sean directas o indirectas, \nentre interrogaciones o sin ellas.'],
+      [ 'Algo que es hermoso, agraciado o excelente.'],
+      [ 'Se denomina el patrimonio, la fortuna o las pertenencias de una \npersona o entidad.'],
+      [ 'Se refiere al objeto, normalmente cilíndrico, que empleamos para \nbeber.'],
+      [ 'Es el verbo ir conjugado en primera o tercera persona de singular \nde pretérito perfecto.'],
+    ];
+    /*Respuesta correcta*/
+    var respuestaCN = [
+     [ 'hollow'],
+     [ 'Valla'],
+     [ 'Allá' ],
+     [ 'Adónde' ],
+     [ 'A ver'],
+     [ 'Consciente'],
+     [ 'Por qué'],
+     [ 'Bello'],
+     [ 'Bienes'],
+     [ 'Vaso'],
+     [ 'Iba'],
+    ];
+    /*Respuestas incorrectas*/
+    var respuestaIN1 = [
+     [ 'ninja'],
+     [ 'Vaya'],
+     [ 'Haya' ],
+     [ 'A dónde' ],
+     [ 'Haber'],
+     [ 'Conciente'],
+     [ 'Porqué'],
+     [ 'Beyo'],
+     [ 'Vienes'],
+     [ 'Baso'],
+     [ 'Iva'],
+    ];
+
+    var respuestaIN2 = [
+     [ 'gz'],
+     [ 'Balla'],
+     [ 'Halla' ],
+     [ 'Adonde' ],
+     [ 'Haver'],
+     [ 'Consiente'],
+     [ 'Porque'],
+     [ 'Vello'],
+     [ 'Víenes'],
+     [ 'Bazo'],
+     [ 'Hiba'],
+    ];
+    /*La variable que hace que todo se repita*/
+    var conteo=0;
+    var texto1;
+    var texto2;
+    var texto3;
+    var Rbuenas=0;
+    var clearS;
+    var numP=0;
+
+    var menuS;
+    var playS;
+    var bienS;
+    var malS;
+    var winS;
+    var loseS;
+    var gameS;
+
+                 
+
+    function create(){
+
+     load = game.add.image(0,0, 'loading');
+     menu = game.add.sprite(0,0,'menu');
+
+    
+
+     menuS = game.add.audio('Smenu');
+     menuS.loopFull(0.5);
+     /*Se crea el boton play y llama a la funcion actionOnClick que contiene el codigo del primer mundo*/
+     button = game.add.button(game.world.centerX - 100, 400, 'playbt', actionOnClick, this, 1, 0, 2);
+     button.onInputOver.add(over, this);
+     button.onInputOut.add(out, this);
+     button.onInputUp.add(up, this);
+
+    }
+    /*Esto es solo para estetica del boton play*/
+    function up() {
+    console.log('button up', arguments);
+    }
+
+    function over() {
+    console.log('button over');
+    }
+
+    function out() {
+    console.log('button out');
+    }
+
+
+    function actionOnClick () {
+      /*Elimino la pantalla inicial*/
+
+      menuS.stop();
+      load.kill();
+      menu.kill();
+      button.kill();
+      numP++;
+      playS = game.add.audio('Splay');
+      playS.play();
+      if(conteo==0){
+      gameS = game.add.audio('Sgame');
+      gameS.play();
+      }
+
+      /*Se crea la pantalla del juego donde play es el fondo*/
+      game.add.sprite(0,0,'play');
+      game.add.sprite(20,380,'cuadropregunta');
+      game.add.button(922, 0, 'close', reiniciar, this,1, 0, 2);
+      /*Genero un numero aleatorio del 0 al 2*/
+      ale=game.rnd.integerInRange(0, 2);
+
+      game.add.sprite(-165,5,'cuadrop');
+      game.add.text(16,16,'Pregunta: '+ numP+'/11',{fontsize:'32px',fill:'#ffffff'});
+
+      /*Lo muestro para hacer pruebas
+      game.add.text(16,80,'Caso: '+ale,{fontsize:'32px',fill:'#000'});*/
+      /*Muestro la pregunta con un arreglo*/
+      game.add.text(40,410,''+preguntasNubes[conteo],{fontsize:'32px',fill:'#ffffff'});
+
+      /*Dependiendo del número se mostrara las opciones en diferentes formas*/
+      switch (ale) {
+        case 0:
+
+        acierto = game.add.button(100, 200, 'nube');
+        error1 = game.add.button(game.world.centerX - 105, 100, 'nube');
+        error2 = game.add.button(705, 200, 'nube');
+
+        texto1 = game.add.text(150,240,''+respuestaCN[conteo],{fontsize:'32px',fill:'#000'});
+        texto2 = game.add.text(game.world.centerX - 60, 140,''+respuestaIN1[conteo],{fontsize:'32px',fill:'#000'});
+        texto3 = game.add.text(760,240,''+respuestaIN2[conteo],{fontsize:'32px',fill:'#000'});
+
+        error1.onInputUp.add(Error1N, this);
+        error2.onInputUp.add(Error1N, this);
+        acierto.onInputUp.add(CorrectoN, this);
+
+        /*game.add.text(16,50,'op1',{fontsize:'32px',fill:'#000'});*/
+          break;
+
+       case 1:
+       error1 = game.add.button(100, 200, 'nube');
+       acierto = game.add.button(game.world.centerX - 105, 100, 'nube');
+       error2 = game.add.button(705, 200, 'nube');
+
+       texto1 = game.add.text(150,240,''+respuestaIN1[conteo],{fontsize:'32px',fill:'#000'});
+       texto2 = game.add.text(game.world.centerX - 60, 140,''+respuestaCN[conteo],{fontsize:'32px',fill:'#000'});
+       texto3 = game.add.text(760,240,''+respuestaIN2[conteo],{fontsize:'32px',fill:'#000'});
+
+       error1.onInputUp.add(Error1N, this);
+       error2.onInputUp.add(Error1N, this);
+       acierto.onInputUp.add(CorrectoN, this);
+
+       /*game.add.text(16,50,'op2',{fontsize:'32px',fill:'#000'});*/
+         break;
+
+       case 2:
+       error2 = game.add.button(100, 200, 'nube');
+       error1 = game.add.button(game.world.centerX - 105, 100, 'nube');
+       acierto = game.add.button(705, 200, 'nube');
+
+       texto1 = game.add.text(150,240,''+respuestaIN2[conteo],{fontsize:'32px',fill:'#000'});
+       texto2 = game.add.text(game.world.centerX - 60, 140,''+respuestaIN1[conteo],{fontsize:'32px',fill:'#000'});
+       texto3 = game.add.text(760,240,''+respuestaCN[conteo],{fontsize:'32px',fill:'#000'});
+
+       error1.onInputUp.add(Error1N, this);
+       error2.onInputUp.add(Error1N, this);
+       acierto.onInputUp.add(CorrectoN, this);
+
+       /*game.add.text(16,50,'op3',{fontsize:'32px',fill:'#000'});*/
+         break;
+      }
+
+
+    }
+
+    function  Error1N(){
+      conteo++;
+      error1.kill();
+      error2.kill();
+      acierto.kill();
+      texto1.kill();
+      texto2.kill();
+      texto3.kill();
+      malS = game.add.audio('Smal');
+      malS.play();
+      if(conteo<=9){
+      game.add.sprite(game.world.centerX - 140, 150, 'mal');
+      clearS = game.add.button(game.world.centerX - 140, 290, 'sig', actionOnClick, this, 1, 0, 2);
+      clearS.onInputUp.add(limpieza, this);
+      }
+      else{
+      game.add.sprite(game.world.centerX - 140, 150, 'mal');
+      clearS = game.add.button(game.world.centerX - 140, 290, 'sig', resultado, this, 1, 0, 2);
+      clearS.onInputUp.add(limpieza, this);
+      }
+    }
+
+    function  CorrectoN(){
+      conteo++;
+      Rbuenas++;
+      error1.kill();
+      error2.kill();
+      acierto.kill();
+      texto1.kill();
+      texto2.kill();
+      texto3.kill();
+      bienS = game.add.audio('Sbien');
+      bienS.play();
+      if(conteo<=9){
+      game.add.sprite(game.world.centerX - 140, 150, 'bien');
+      clearS = game.add.button(game.world.centerX - 140, 290, 'sig', actionOnClick, this, 1, 0, 2);
+      clearS.onInputUp.add(limpieza, this);
+      }
+      else{
+      game.add.sprite(game.world.centerX - 140, 150, 'bien');
+      clearS = game.add.button(game.world.centerX - 140, 290, 'sig', resultado, this, 1, 0, 2);
+      clearS.onInputUp.add(limpieza, this);
+      }
+    }
+
+    function resultado()
+    {
+      var errores=10;
+      errores=errores-Rbuenas;
+      gameS.stop();
+      if(Rbuenas>=7){
+        game.add.sprite(0,0,'win');
+        winS = game.add.audio('Swin');
+        winS.play();
+          for(var i=0; i<10; i++){
+            var globo;
+            var xg = game.rnd.integerInRange(0, 1000);
+            var yg = game.rnd.integerInRange(0, 600 );
+            globo = game.add.sprite(xg,yg, 'globo');
+            game.physics.enable(globo, Phaser.Physics.ARCADE);
+            globo.body.velocity.y=-150;
+          }
+
+      }
+      else{
+        game.add.sprite(0,0,'lose');
+        loseS = game.add.audio('Slose');
+        loseS.play();
+      }
+      game.add.button(game.world.centerX - 140, 340, 'sig', reiniciar, this, 1, 0, 2);
+      game.add.sprite(game.world.centerX - 208, 424,'cuadrof');
+      game.add.text(357,430,'Número de aciertos: '+Rbuenas,{fontsize:'32px',fill:'#ffffff'});
+      game.add.text(360,460,'Número de errores: '+errores,{fontsize:'32px',fill:'#ffffff'});
+    }
+
+    function limpieza(){
+      clearS.kill();
+      play.kill();
+    }
+
+    function reiniciar(){
+      location.reload();
+    }
+
+    function update(){
+
+    }
+
+
+</script>
+<center><a href="../lenguajetercero/index.html" style="
+  box-shadow: 3px 4px 0px 0px #54a3f7;
+  background:linear-gradient(to bottom, #007dc1 5%, #0061a7 100%);
+  background-color:#007dc1;
+  border-radius:12px;
+  border:1px solid #124d77;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Impact;
+  font-size:25px;
+  font-weight:bold;
+  padding:7px 25px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #154682;
+}
+.myButton:hover {
+  background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
+  background-color:#0061a7;
+}
+.myButton:active {
+  position:relative;
+  top:1px;
+}
+">Siguiente juego</a></center>
+ </body>
+</html>

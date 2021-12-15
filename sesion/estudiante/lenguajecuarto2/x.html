@@ -1,0 +1,31 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="style.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+    <h1>Adivina las letras</h1>
+
+    <h3>Juega (Palabra a buscar)</h3>
+    <div id="letrasBuscar"></div>
+    <div id="resultado"></div>
+
+    <h3>Letras seleccionadas (Pulse una letra)</h3>
+    <div id="letrasBuscadas"></div>
+
+    <img id="imagen">
+
+</body>
+</html>
+
+<script src="teclado.js"></script>
+<script src="palabras.js"></script>
+<script src="letras.js"></script>
+
+<script>
+const letras=new Letras();
+letras.buscarPalabra(peliculas);
+letras.mostrarPalabraEnWeb(document.getElementById("letrasBuscar"), []);
+</script>

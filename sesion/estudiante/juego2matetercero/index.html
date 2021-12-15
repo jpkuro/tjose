@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+
+<html lang="es">
+	<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<link  rel="stylesheet" href="../../../login/css/bootstrap.min.css"/>
+ <link  rel="stylesheet" href="../../../login/css/bootstrap-theme.min.css"/>    
+ <link rel="stylesheet" href="../../../login/css/main.css">
+ <link  rel="stylesheet" href="../../../login/css/font.css">
+ <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link  rel="stylesheet" href="../../../login/css/jquery.dataTables.min.css"/>   
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+ <script src="../../../login/js/jquery.js" type="text/javascript"></script>
+ <script type="text/javascript" src="js/buscar.js"></script>
+
+  <script src="../../../login/js/bootstrap.min.js"  type="text/javascript"></script>
+  <script src="../../../login/js/jquery.dataTables.min.js"></script>
+ 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+		<title>Matematica tercero</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="0001.css">
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				background: #FFE4C4;
+			}
+			#encabezado{
+				width: 100%;
+				height: 70px;
+			}
+			#menuIzq {
+				width: 280px;
+				height: 550px;			
+			}
+			.flotaLeft{
+				float: left;
+			}		
+			.borraFlujo{
+				clear: both;
+			}
+			#menuIzq label{
+				display: block;
+				font-size: 33px;
+			}
+			.cajaTexto {
+				border: solid 1px #5F9EA0;
+				font-size: 22px;
+				width: 250px;
+				background: #FFFFFF;
+				color: #5F9EA0;
+				visibility: hidden;
+				position: absolute;
+				z-index: 10;
+			}
+			.menu, .cajaTexto{	
+				border-radius: 5px;			
+				padding: 5px;
+				cursor: pointer;
+			}
+			.menu {
+				color: #FFFFFF;
+				background: #5F9EA0;
+				border: solid 1px #FFFFFF;		
+			}
+			input[type="radio"]{
+				display: none;
+			}
+			#menuDcha {
+				float: right;
+				width: 240px;
+				height: 550px;
+			}
+			#contenedor {
+				border: dashed 5px #33CCFF;
+				background-image: url('cuadricula0001.png');
+				background-repeat: repeat;
+				width: 790px;	
+				height: 520px;
+				box-shadow: 0 0 30px #33CCFF;
+				padding: 15px;
+				text-align: center;
+				z-index: 30;
+			}
+			#operacion {
+				font-size: 125px;
+				height: 200px;
+				width: 460px;
+			}
+			#propResultado{
+				width: 40%;
+			}
+			#propuestaResultado{
+				clear: both;
+				outline: 0px;
+				border: solid 1px #FFFFFF;
+				background-color: transparent;
+				text-align: center;
+				font-size: 150px;
+				border-radius: 11px;
+				width: 222px;
+				margin-right: 15px;
+			}
+			#botonResultado, #botonSiguiente {
+				outline: 0px;
+				font-size: 66px;				
+				text-align: center;
+				padding:15px;
+				margin:20px;	
+				box-shadow: 0px 3px 15px 0px #1E90FF;
+				transition: all 0.10s ease-in-out;
+				color: #FFFFFF;
+				border: solid 1px #FFFFFF;
+				border-radius: 40px;
+				background: #5F9EA0;	
+				position: relative;
+			}
+			#botonResultado {
+				cursor: pointer;
+			}
+			#botonSiguiente {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+			#botonResultado:active, #botonSiguiente:active{
+				top:5px;
+				box-shadow: 0px 1px 0px 0px #1E90FF;
+			}
+			#mensaje {
+				font-size: 100px;
+				width: 100%;
+				height: 200px;
+			}
+			#pie {
+				width: 100%;
+				height: 30px;
+			}
+			.ocultaContenedor{
+				visibility: hidden;
+			}			
+		</style>
+		<script>
+			'use strict';
+			window.onload = function(){
+				crearSuma();
+				var nodoRadioSuma = document.getElementById('suma');
+				var nodoTipoOperacion = document.getElementsByName('tipoOperacion');
+				var btnSiguiente = document.getElementById('botonSiguiente');
+				var btnComprobar = document.getElementById('botonResultado');
+				
+				// Evento que se ejecuta al hacer click en el botón "Comprobar".
+				btnComprobar.addEventListener('click', comprobarChecked);
+				
+				/*	Evento para decidir como se actuará al hacer click en el botón "Siguiente"
+					dependiendo de la opción que este marcada en los botones radio.				  */
+				btnSiguiente.addEventListener('click', function(){
+															if(nodoRadioSuma.checked){
+																crearSuma();
+															}else{
+																crearResta();
+															}
+														});
+
+				//	Evento que recoge cualquier tipo de pulsación de teclado y comprueba si se ha pulsado la tecla intro.
+				document.addEventListener('keypress', function(codTecla){
+														var foco = document.activeElement.id;
+														if(codTecla.keyCode==13 & foco=='propuestaResultado'){comprobarChecked();}
+													});
+													
+				//	Evento que se producirá al hacer click en la opción "suma" del botón radio.  								
+				nodoTipoOperacion[0].addEventListener('click', crearSuma);
+				
+				//	Evento que se producirá al hacer click en la opción "suma" del botón radio.
+				nodoTipoOperacion[1].addEventListener('click', crearResta);
+				
+				/*	Función que usan dos de los eventos anteriores para saber que opción está marcada en el botón radio y
+					dependiendo de esto, invocar una función determinada.*/
+				function comprobarChecked(){
+					if(nodoRadioSuma.checked){
+						comprobarResultado('suma');
+					}else{
+						comprobarResultado('resta');
+					}
+				}
+			}
+			
+			/**
+			  * Función que recibe un parámetro booleano, que se encarga del diseño de algunos elementos
+			  * según si se ha cometido un error o no en la respuesta dada, también
+			  * indicará que elemento debe de coger el foco después de la comprobación.
+			*/
+			function apariencia(hayError){
+				if(hayError){
+					document.getElementById('propuestaResultado').disabled = false;
+					document.getElementById('propuestaResultado').focus();
+					document.getElementById('mensaje').innerHTML = '';
+					document.getElementById('propuestaResultado').value = '';
+					document.getElementById('botonSiguiente').disabled = true;
+				} else {
+					document.getElementById('botonSiguiente').disabled = false;
+					document.getElementById('botonSiguiente').focus();
+					document.getElementById('propuestaResultado').disabled = true;	
+				}
+				
+			}
+			
+			/**
+			  *Función que crea dos números aleatorios entre el 0 y el 9 que formará la operación(suma).
+			  */
+			function crearSuma(){
+				var sumando = [];
+				apariencia(true);				
+				sumando[0] = Math.floor(Math.random()*(9-1))+1;
+				sumando[1] = Math.floor(Math.random()*(9-1))+1;
+				document.getElementById('operacion').innerHTML = sumando[0] + ' + ' + sumando[1] + ' = ';
+			}
+			
+			/**
+			  * Función que crea dos números aleatorios, el primero entre el 0 y el 9, y el segundo entre 0 y
+			  * el número anterior, que formará la operación(resta).
+			  */
+			function crearResta(){
+				var minuendo = 0;
+				var sustraendo = 0;
+				apariencia(true);				
+				minuendo = Math.floor(Math.random()*(10-1))+1;
+				sustraendo = Math.floor(Math.random()*(minuendo-1))+1;
+				document.getElementById('operacion').innerHTML = minuendo + ' - ' + sustraendo + ' = ';
+			}
+			
+			/**
+			  * Función que recibe un parámetro que contiene una cadena de texto, 'suma' o 'resta',
+			  * a partir de ese parámetro comprobará el resultado de la operación creada anteriormente,
+			  * dependiendo de si es una resta o una suma y acabará mostrando en pantalla 'erroneo' o
+			  * 'correcto' dependiendo del resultado.
+			  */
+			function comprobarResultado(sumaResta){
+				var msgBienMal = document.getElementById('mensaje');
+				var resultadoPropuesto = Number(document.getElementById('propuestaResultado').value);
+				var operacionPropuesta = document.getElementById('operacion').textContent;
+				if(sumaResta=='suma'){
+					var resultado = Number(operacionPropuesta.slice(0,1)) + Number(operacionPropuesta.slice(4,5));
+				}else{
+					var resultado = Number(operacionPropuesta.slice(0,1)) - Number(operacionPropuesta.slice(4,5));
+				}				
+				if(resultado==resultadoPropuesto){
+					msgBienMal.style.color = 'green';
+					msgBienMal.innerHTML = '¡Correcto!';
+					apariencia(false);				
+				}else{
+					msgBienMal.style.color = 'red';
+					msgBienMal.innerHTML = '¡Incorrecto!';
+				}
+			}
+			
+		</script>
+		<script>
+			window.onload = function(){
+				var btnSiguiente = document.getElementById('botonSiguiente');
+				var btnComprobar = document.getElementById('botonResultado');
+				var nodoCajaTexto = document.getElementsByClassName('cajaTexto');
+				var nodosMenu = document.getElementsByName('tipoOperacion');
+				btnComprobar.addEventListener('click', comprobarChecked);
+				btnSiguiente.addEventListener('click', operacionElegida);
+				document.addEventListener('keypress', function(codTecla){
+					var foco = document.activeElement.id;
+					if(codTecla.keyCode===13 & foco==='propuestaResultado'){comprobarChecked();}
+				});
+				for (var i=0; i<nodosMenu.length; i++){
+					nodosMenu[i].parentNode.addEventListener('mouseover', muestraCaja.bind(this, i));
+					nodosMenu[i].parentNode.addEventListener('mouseout', muestraCaja.bind(this, i));
+					nodosMenu[i].addEventListener('click', operacionElegida.bind());
+				}
+				function muestraCaja(i, ev){
+					if(ev.type === 'mouseover'){
+						nodoCajaTexto[i].style.visibility = 'visible';
+						nodoCajaTexto[i].style.top = nodosMenu[i].parentNode.offsetTop + 'px';
+						nodoCajaTexto[i].style.left = nodosMenu[i].parentNode.offsetWidth + 'px';
+						nodosMenu[i].parentNode.style.backgroundColor = '#FFFFFF';
+						nodosMenu[i].parentNode.style.color = '#5F9EA0';
+						}else{
+						nodoCajaTexto[i].style.visibility = 'hidden';
+						nodosMenu[i].parentNode.style.backgroundColor = '#5F9EA0';
+						nodosMenu[i].parentNode.style.color = '#FFFFFF';
+					}				
+				}
+				function comprobarChecked(){
+					for(var z=0; z<nodosMenu.length; z++){
+						if(nodosMenu[z].checked){
+							comprobarResultado(nodosMenu[z].value);						
+						}
+					}
+				}
+			}
+			function operacionElegida(){
+				var nodosOcultos = document.getElementsByClassName('ocultaContenedor');
+				for (var j=0; j<nodosOcultos.length; j++){
+					nodosOcultos[j].style.visibility = 'visible';
+				}
+				var nodosMenu = document.getElementsByName('tipoOperacion');			
+				for(var i=0; i<nodosMenu.length; i++){
+					if(nodosMenu[i].checked){
+						var opcion = nodosMenu[i].value;					
+					}
+				}
+				if(document.getElementById('canvas0')){
+					var nodosParaBorrar = document.querySelectorAll('#operacion div');
+					var nodoPadre = document.getElementById('operacion');
+					for(var i=0, j = nodosParaBorrar.length; i<j; i++){
+						nodoPadre.removeChild(nodosParaBorrar[i]);
+					}
+				}
+				switch (opcion){
+					case 'contar':
+					contar();
+					break;
+					case 'suma':
+					crearSuma(2, 9, 1, 10, false);
+					break;
+					case 'sumaN2':
+					crearSuma(2, 9, 1, 18, false);
+					break;
+					case 'sumaN3':
+					crearSuma(2, 20, 2, 20, false);
+					break;
+					case 'resta':
+					crearResta(10, 1, false);
+					break;
+					case 'restaN2':
+					crearResta(20, 1, false);
+					break;
+					
+				}
+			}
+			
+			function comprobarResultado(operacion){
+				var msgBienMal = document.getElementById('mensaje');
+				var resultadoPropuesto = Number(document.getElementById('propuestaResultado').value);
+				var operacionPropuesta = document.getElementById('operacion').textContent;
+				if(operacion==='suma' || operacion==='sumaN2' || operacion==='sumaN3'){
+					var resultado = operacionPropuesta.split('+');
+					resultado[2]= Number(resultado[0]) + parseInt(resultado[1]);
+					}else if(operacion==='resta' || operacion==='restaN2'){
+					var resultado = operacionPropuesta.split('-');
+					resultado[2] = Number(resultado[0]) - parseInt(resultado[1]);
+					} else if(operacion==='contar') {
+					var resultado = document.querySelectorAll('#operacion div').length;
+				}			
+				if(resultado[2]===resultadoPropuesto || resultado===resultadoPropuesto){
+					msgBienMal.style.color = 'green';
+					msgBienMal.innerHTML = '¡Correcto!';
+					apariencia(false);				
+					}else{
+					msgBienMal.style.color = 'red';
+					msgBienMal.innerHTML = '¡Incorrecto!';
+				}
+			}
+			function apariencia(hayError){
+				var btnSiguiente = document.getElementById('botonSiguiente');
+				var resultadoPropuesto = document.getElementById('propuestaResultado');
+				if(hayError){
+					resultadoPropuesto.disabled = false;
+					resultadoPropuesto.focus();
+					resultadoPropuesto.value = '';
+					document.getElementById('mensaje').innerHTML = '';
+					btnSiguiente.style.opacity = '0.5';
+					btnSiguiente.style.cursor = 'not-allowed';	
+					btnSiguiente.disabled = true;
+					} else {
+					btnSiguiente.disabled = false;
+					btnSiguiente.focus();
+					btnSiguiente.style.opacity = '1';
+					btnSiguiente.style.cursor = 'pointer';
+					resultadoPropuesto.disabled = true;					
+				}			
+			}
+			/**
+			  * Función que se encarga decidir que forma tomarán los objetos que aparecerán en pantalla (mediante el uso de canvas)
+			  * para contar, entre cuatro opciones (circulo, estrella, triangulo, cuadrado) de forma aleatoria.
+			  * También dará un número aleatorio del 1 al 10, que será el número de objetos que se dibujaran por pantalla y crear los
+			  * nodos canvas y se llamará a la función dibujar pasándole como parámetros el id del último elemento creado, el valor de
+			  * la variable i en ese momento y la forma elegida a dibujar.
+			  */
+			function contar(){
+				apariencia(true);
+				var contObjs = document.getElementById('operacion');
+				contObjs.innerHTML = '';
+				var nuevoNodo ;	
+				var numObjs = Math.floor(Math.random()*(11-1))+1;
+				var forma = ['circulo', 'estrella', 'triangulo', 'cuadrado'];
+				var formaElegida = Math.floor(Math.random()*(forma.length));
+				for (var i=0; i<numObjs; i++){
+					nuevoNodo = document.createElement('div');
+					nuevoNodo.className = "flotaLeft";
+					nuevoNodo.style.width = '80px';
+					nuevoNodo.style.height = '80px';
+					contObjs.appendChild(nuevoNodo);
+					nuevoNodoCanvas = document.createElement('canvas');
+					nuevoNodo.appendChild(nuevoNodoCanvas);
+					nuevoNodoCanvas.id = "canvas" + i; 			
+					dibujar(nuevoNodoCanvas.id, i, forma[formaElegida]);
+				}	
+			}
+			
+			/**
+			  * Función que recibe tres parámetros, el id del elemento donde se creará el dibujo, el valor numérico de la varible i en
+			  * la función de la que viene, que dependerá del número de iteración en que se encuentre y que cuando se dibuje la
+			  * estrella intervenga en la rotación de esta y por último, la forma elegida a dibujar.
+			  * Se creará el objeto canvas, se llamará a una función, dependiendo de la forma que se vaya a dibujar y posteriormente, se
+			  * pintará el contorno y el relleno de la figura.
+			  */
+			function dibujar(id, i, formaElegida){
+				var canvas = document.getElementById(id);
+				if (canvas.getContext) {
+					var ctx = canvas.getContext("2d");
+					if(formaElegida==='circulo') {
+						dibujarCirculo(ctx);
+					} else if(formaElegida==='estrella') {
+						dibujarEstrella(ctx, i);
+					} else if(formaElegida==='triangulo') {
+						dibujarTriangulo(ctx);
+					} else if(formaElegida==='cuadrado') {
+						dibujarCuadrado(ctx);
+					}	
+					ctx.fillStyle = colorAleatorio();
+					ctx.strokeStyle = colorAleatorio();
+					ctx.lineWidth = 3;
+					ctx.stroke();
+					ctx.fill();			
+				}
+			}
+			
+			/**
+			  * Función que establece los datos necesarior para que posteriormente se dibuje un cuadrado. Recibe como
+			  * parámetro el objeto canvas.
+			  */
+			function dibujarCuadrado(ctx){
+				ctx.beginPath();
+				ctx.moveTo(10,10);
+				ctx.lineTo(70,10);
+				ctx.lineTo(70,70);
+				ctx.lineTo(10,70);
+				ctx.lineTo(10,10);
+				ctx.lineCap='square';
+			}
+			
+			/**
+			  * Función que establece los datos necesarios para que posteriormente se dibuje un circulo. Recibe como
+			  * parámetro el objeto canvas.
+			  */
+			function dibujarCirculo(ctx){
+				var X = 40;
+				var Y = 40;
+				var r = 30;
+				ctx.arc(X,Y,r,0,2*Math.PI);
+			}
+			
+			/**
+			  * Función que establece los datos necesarios para que posteriormente se dibuje un triangulo. Recibe como
+			  * parámetro el objeto canvas.
+			  */
+			function dibujarTriangulo(ctx) {
+				ctx.beginPath();
+				ctx.moveTo(40,10);
+				ctx.lineTo(70,70);
+				ctx.lineTo(10,70);
+				ctx.lineTo(40,10);	
+				ctx.lineJoin='miter';
+			}
+			
+			/**
+			  * Función que establece los datos necesarios para que posteriormente se dibuje una estrella de 5 puntas. Recibe como
+			  * parámetro el objeto canvas y un número que  estará comprendido entre 0 y 9 y nos valdrá para que la estrella rote
+			  * en cada vez que se dibuje.
+			  */
+			function dibujarEstrella(ctx,i){
+				var x = 0;
+				var y = 0;
+				var radio = 30;				
+				var puntas = 5;
+				var paso = 2;				
+				var estrella= puntas / paso;
+				var rad = (2*Math.PI) / estrella;				
+				ctx.translate(40, 40);
+				ctx.rotate(i*Math.PI/2);
+				ctx.beginPath();
+				for( var i = 0; i < puntas; i++ ){
+					x = radio * Math.cos( rad*i );
+					y = radio * Math.sin( rad*i );
+					ctx.lineTo(x, y);
+				}
+				ctx.closePath();
+			}
+			
+			/**
+			  * Función que se encarga de crear los datos que forman un color rgb aleatoriamente.
+			  */
+			function colorAleatorio(){
+				var color = [];
+				for (var j=0; j<3; j++){
+					color[j]= Math.floor(Math.random()*222);
+				}
+				return 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+			}	
+		</script>
+	</head>
+	<body>
+<div class="container"><!--container start-->
+<div class="row">
+
+		<center><h1>Aprende Jugando</h1></center>
+		<legend>
+
+		<div id="encabezado"></div>
+		<div id="menuIzq" class="flotaLeft">
+			<label class="menu">
+				<input type="radio" name="tipoOperacion" value="contar"/>Contar
+				<div class="cajaTexto">Cuenta objetos</div>
+			</label>
+			<label class="menu">
+				<input type="radio" name="tipoOperacion" value="suma" checked="checked"/>Suma
+				<div class="cajaTexto">Crea operaciones con dos sumandos de una cifra, con resultado hasta 10.<br/>Ej: 4+5</div>
+			</label>
+			<label class="menu">
+				<input type="radio" name="tipoOperacion" value="resta"/>Resta	
+				<div class="cajaTexto">Crea operaciones con minuendo y sustraendo de una cifra.<br/>Ej: 9-3</div>
+			</label>
+			<label class="menu">
+				<a href="../../../login/account.php?q=4"><button style="display: none;"></button></a>Terminar
+				<div class="cajaTexto">Termina el juego<br>Fin</div>
+
+			</label>
+		
+		</div>
+		<div id="contenedor" class="flotaLeft">			
+		<div id="contOperacion" class="borraFlujo ocultaContenedor">
+		<div id="operacion" class="flotaLeft"></div>
+		<div id="propResultado" class="flotaLeft"><input type="text" id="propuestaResultado"/></div>
+		</div>
+		<div id="contBotones" class="ocultaContenedor">
+		<button class="boton" id="botonResultado" >Comprobar</button>
+		<button id="botonSiguiente" class="boton" >Siguiente</button>
+		</div>			
+		<div id="mensaje" class="ocultaContenedor"></div>			
+		</div>	
+		
+		
+		</legend>
+</div>
+</div>
+</div>
+		</body>
+		</html>					

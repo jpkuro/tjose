@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>FrutaKids</title>
+	<link rel="stylesheet" type="text/css" href="./app.css">
+</head>
+
+
+<!-- html -->
+<body>
+	<div class="flex">
+		<div class="triangfrutas">
+			<div class="triangulofrutas1">
+				<div id='drag1'></div>
+				<div id='drag2'></div>				
+			</div>
+			<div id='drag3' class="triangulofrutas2"></div>
+		</div>
+
+		<div class="infocuadro">		
+			<p id='info1'> ? </p>
+			<p id='info2'> ? </p>
+			<p id='info3'> ? </p>
+		</div>
+	</div>
+
+	<div class="cajonflex">
+		<div 
+			id='caja1'
+			class="cajon dropzone" 
+			ondragover="permitedrop(event)"
+			ondrop='drop(event)'>
+		</div>
+		<img src="./ppal/mayor_que.svg" alt="menorque" class="fruta" />
+		<div
+			id='caja2'
+			class="cajon dropzone" 
+			ondragover="permitedrop(event)"
+			ondrop='drop(event)'>
+		</div>
+		<img src="./ppal/mayor_que.svg" alt="menorque" class="fruta" />
+		<div
+			id='caja3'
+			class="cajon dropzone" 
+			ondragover="permitedrop(event)"
+			ondrop='drop(event)'>
+		</div>
+	</div>
+
+	<div id="evalresultado" class="resultado">
+		<img src="./botones/revisar_activo.svg" alt="boton verde" class="boton" />
+	</div>
+	<br>
+	<br>
+	<div id="evalresultado" class="resultado">
+		<a href="../../../login/account.php?q=4"><img src="./botones/inicio.svg" alt="boton verde" class="boton" /></a> 
+	</div>
+	<div id="casobien" class="resultado"></div>
+
+	
+	<!-- javscript+dom -->
+	<script src="./app.js"></script>	
+</body>
+</html>

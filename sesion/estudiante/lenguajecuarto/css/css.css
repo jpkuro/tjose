@@ -1,0 +1,11 @@
+body{
+background: #88D4F3;
+}
+
+#gameDiv{
+  margin:50px;
+  margin-top:65px;
+  background: black;
+  border: solid;
+  border-radius: 15px;
+}

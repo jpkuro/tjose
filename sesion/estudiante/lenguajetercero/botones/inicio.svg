@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1080" height="1080" viewBox="0 0 1080 1080" xml:space="preserve">
+<desc>Created with Fabric.js 4.2.0</desc>
+<defs>
+</defs>
+<rect x="0" y="0" width="100%" height="100%" fill="transparent"></rect>
+<g transform="matrix(1 0 0 1 540 540)" id="0375d409-e829-45a9-a9f6-b199310e0df8"  >
+<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-opacity: 0; fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  x="-540" y="-540" rx="0" ry="0" width="1080" height="1080" />
+</g>
+<g transform="matrix(1 0 0 1 540 540)" id="a9922e61-548c-4a87-a9df-664b430b8a10"  >
+</g>
+<g transform="matrix(10.47 0 0 10.47 540 379.68)" id="6a569419-153b-4ecc-ad18-6302dd321467"  >
+<path style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(22,58,223); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-49.5, -50)" d="M 46.971 82.136 C 49.800999999999995 84.91799999999999 54.336 84.91799999999999 57.165 82.136 L 84.187 55.114999999999995 C 86.966 52.285999999999994 86.966 47.699999999999996 84.187 44.92099999999999 L 57.165 17.899 C 54.336 15.07 49.8 15.07 46.971 17.899 C 43.312999999999995 21.752000000000002 51.312999999999995 32.532 55.117 42.189 L 17.51 42.189 C 14.875000000000002 42.189 12.73 44.336 12.73 46.921 L 12.73 54.188 C 12.73 56.823 14.876000000000001 58.969 17.51 58.969 L 54.628 58.969 C 50.775 68.091 43.653 77.844 46.971 82.136 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(1 0 0 1 540 839.47)" style="" id="d8461c07-3bb7-4e5a-b59f-17b1cbb07a45"  >
+		<text xml:space="preserve" font-family="Raleway" font-size="189" font-style="normal" font-weight="900" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,87,79); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-252.31" y="59.37" >inicio</tspan></text>
+</g>
+</svg>
